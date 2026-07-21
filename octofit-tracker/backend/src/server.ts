@@ -6,6 +6,13 @@ import { connectDatabase } from './config/database';
 const app = express();
 const port = Number(process.env.PORT || 8000);
 
+const getApiBaseUrl = (serverPort: number) => {
+  const codespaceName = process.env.CODESPACE_NAME;
+  return codespaceName
+    ? `https://${codespaceName}-8000.app.github.dev`
+    : `http://localhost:${serverPort}`;
+};
+
 app.use(express.json());
 app.use('/api', apiRoutes);
 
@@ -14,10 +21,7 @@ const startServer = async () => {
     await connectDatabase();
     console.log('MongoDB connected');
     app.listen(port, () => {
-      const codespaceName = process.env.CODESPACE_NAME;
-      const baseUrl = codespaceName
-        ? `https://${codespaceName}-8000.app.github.dev`
-        : `http://localhost:${port}`;
+      const baseUrl = getApiBaseUrl(port);
       console.log(`Backend listening on port ${port}`);
       console.log(`API base URL: ${baseUrl}`);
     });

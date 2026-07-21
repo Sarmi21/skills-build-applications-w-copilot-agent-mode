@@ -1,25 +1,30 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import apiRoutes from './routes/api';
+import { connectDatabase } from './config/database';
 
 const app = express();
-const port = 8000;
-const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/octofit_db';
+const port = Number(process.env.PORT || 8000);
 
 app.use(express.json());
+app.use('/api', apiRoutes);
 
-app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', service: 'octofit-backend' });
-});
-
-mongoose
-  .connect(mongoUri)
-  .then(() => {
+const startServer = async () => {
+  try {
+    await connectDatabase();
     console.log('MongoDB connected');
     app.listen(port, () => {
+      const codespaceName = process.env.CODESPACE_NAME;
+      const baseUrl = codespaceName
+        ? `https://${codespaceName}-8000.app.github.dev`
+        : `http://localhost:${port}`;
       console.log(`Backend listening on port ${port}`);
+      console.log(`API base URL: ${baseUrl}`);
     });
-  })
-  .catch((error) => {
+  } catch (error) {
     console.error('MongoDB connection failed', error);
     process.exit(1);
-  });
+  }
+};
+
+startServer();

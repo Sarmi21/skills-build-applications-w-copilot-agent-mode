@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 
-const getApiBaseUrl = (resource) => {
+const getApiBaseUrl = () => {
   const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
 
   if (codespaceName) {
-    return `https://${codespaceName}-8000.app.github.dev/api/${resource}/`
+    return `https://${codespaceName}-8000.app.github.dev/api/workouts/`
   }
 
-  return `http://localhost:8000/api/${resource}/`
+  return 'http://localhost:8000/api/workouts/'
 }
 
 const extractData = (payload) => {
@@ -42,7 +42,7 @@ function Workouts() {
   useEffect(() => {
     const loadWorkouts = async () => {
       try {
-        const response = await fetch(getApiBaseUrl('workouts'))
+        const response = await fetch(getApiBaseUrl())
 
         if (!response.ok) {
           throw new Error(`Request failed with status ${response.status}`)
@@ -68,7 +68,7 @@ function Workouts() {
             <h2 className="h4 mb-1">Workouts</h2>
             <p className="text-muted mb-0">Training plans tailored to the community’s goals.</p>
           </div>
-          <a className="btn btn-outline-primary btn-sm" href={getApiBaseUrl('workouts')} target="_blank" rel="noreferrer">
+          <a className="btn btn-outline-primary btn-sm" href={getApiBaseUrl()} target="_blank" rel="noreferrer">
             Open JSON
           </a>
         </div>

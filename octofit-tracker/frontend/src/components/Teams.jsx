@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 
-const getApiBaseUrl = (resource) => {
+const getApiBaseUrl = () => {
   const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
 
   if (codespaceName) {
-    return `https://${codespaceName}-8000.app.github.dev/api/${resource}/`
+    return `https://${codespaceName}-8000.app.github.dev/api/teams/`
   }
 
-  return `http://localhost:8000/api/${resource}/`
+  return 'http://localhost:8000/api/teams/'
 }
 
 const extractData = (payload) => {
@@ -42,7 +42,7 @@ function Teams() {
   useEffect(() => {
     const loadTeams = async () => {
       try {
-        const response = await fetch(getApiBaseUrl('teams'))
+        const response = await fetch(getApiBaseUrl())
 
         if (!response.ok) {
           throw new Error(`Request failed with status ${response.status}`)
@@ -68,7 +68,7 @@ function Teams() {
             <h2 className="h4 mb-1">Teams</h2>
             <p className="text-muted mb-0">Collaborative groups building momentum together.</p>
           </div>
-          <a className="btn btn-outline-primary btn-sm" href={getApiBaseUrl('teams')} target="_blank" rel="noreferrer">
+          <a className="btn btn-outline-primary btn-sm" href={getApiBaseUrl()} target="_blank" rel="noreferrer">
             Open JSON
           </a>
         </div>

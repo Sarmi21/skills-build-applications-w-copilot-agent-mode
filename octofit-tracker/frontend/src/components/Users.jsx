@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 
-const getApiBaseUrl = (resource) => {
+const getApiBaseUrl = () => {
   const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
 
   if (codespaceName) {
-    return `https://${codespaceName}-8000.app.github.dev/api/${resource}/`
+    return `https://${codespaceName}-8000.app.github.dev/api/users/`
   }
 
-  return `http://localhost:8000/api/${resource}/`
+  return 'http://localhost:8000/api/users/'
 }
 
 const extractData = (payload) => {
@@ -42,7 +42,7 @@ function Users() {
   useEffect(() => {
     const loadUsers = async () => {
       try {
-        const response = await fetch(getApiBaseUrl('users'))
+        const response = await fetch(getApiBaseUrl())
 
         if (!response.ok) {
           throw new Error(`Request failed with status ${response.status}`)
@@ -68,7 +68,7 @@ function Users() {
             <h2 className="h4 mb-1">Users</h2>
             <p className="text-muted mb-0">Athletes and members tracked by the platform.</p>
           </div>
-          <a className="btn btn-outline-primary btn-sm" href={getApiBaseUrl('users')} target="_blank" rel="noreferrer">
+          <a className="btn btn-outline-primary btn-sm" href={getApiBaseUrl()} target="_blank" rel="noreferrer">
             Open JSON
           </a>
         </div>
